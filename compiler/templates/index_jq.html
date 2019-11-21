@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.js"></script>
+    <!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js"
+            integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+            crossorigin="anonymous"></script>
+    <style type="text/css">
+        .top {
+            margin-top: 5px;
+            margin-bottom: 10px;
+        }
+    </style>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("button").click(function () {
+                getItem();
+            });
+
+            function getItem() {
+                var src = $('#code').val();
+                console.log(src);
+                if (src.length == 0)
+                    alert('Input cannot be empty');
+                else {
+                    $.getJSON('{% url 'compiler:lexer_json' %}', {'src': src}, function (res) {
+                        console.log(res);
+                        $('tbody').empty();
+                        for (i = 0; i < res.table.length; i++) {
+                            var tr = document.createElement("tr");
+                            tr.id = i;
+                            for (j = 0; j < res.table[i].length; j++) {
+                                var td = document.createElement("td");
+                                td.innerText = res.table[i][j];
+                                tr.append(td);
+                            }
+                            $('tbody').append(tr);
+                        }
+                        $('#res').empty();
+                        for (i = 0; i < res.res.length; i++) {
+                            var p = document.createElement("p");
+                            for (j = 0; j < res.res[i].length; j++) {
+                                p.append('[' + res.res[i][j] + '] ')
+                            }
+                            $('#res').append(p);
+                        }
+                    })
+                }
+            }
+        })
+    </script>
+</head>
+<body>
+<div class="row top">
+    <div class="col-md-10 col-md-offset-1">
+        <ul class="nav nav-tabs">
+            <li role="presentation" class="active"><a href="#"><strong>compiler</strong></a></li>
+        </ul>
+    </div>
+</div>
+<div class="row top">
+    <div class="col-md-5 col-md-offset-1">
+        <textarea class="form-control" id="code" rows="10" placeholder="input your code here"
+                  style="font-size: 20px"></textarea>
+        <div class="btn-btn-group btn-group-lg" role="group" aria-label="...">
+            <button type="submit" class="btn btn-default top" name="submit" οnclick="document.formName.submit()">
+                分析
+            </button>
+        </div>
+        <div id="res" style="font-size: 20px">
+        </div>
+    </div>
+
+    <div class="col-md-5">
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th>index</th>
+                <th>标识符i</th>
+                <th>字符c</th>
+                <th>字符串s</th>
+                <th>常数con</th>
+                <th>关键字k</th>
+                <th>界符p</th>
+            </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+</body>
+</html>
