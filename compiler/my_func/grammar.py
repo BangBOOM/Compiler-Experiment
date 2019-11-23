@@ -1,14 +1,14 @@
 class GrammarParser:
     def __init__(self):
-        self.GRAMMAR = {}  # VN->VT
-        self.VN = set()
-        self.VT = set()
+        self.GRAMMAR={} #{A:xxx} 字典形式存放文法
+        self.VN=set()
+        self.VT=set()
         self.Z='E'
-        self.P_LIST = []  # 文法规则list
-        self.FIRST = []
-        self.FOLLOW = {}    #{A:{a|..Aa...}}
+        self.P_LIST=[]  #文法规则
+        self.FIRST=[]   #first集合
+        self.FOLLOW={}  #{A:{a|..Aa...}}
         self.SELECT = []
-        self.FIRDIC = {}    # {A:{a|A->a.....}}
+        self.FIRDIC = {}  # {A:{a|A->a.....}}
 
     def initGrammar(self,path):
         with open(path, 'r', encoding='utf-8') as f:
@@ -106,54 +106,51 @@ class GrammarParser:
 
 
 class LL1(GrammarParser):
-    def __init__(self,path):
+    def __init__(self, path):
         GrammarParser.__init__(self)
-        self.analysis_table={}
+        self.analysis_table = {}
         self.initGrammar(path)
+
     def initAnalysisTable(self):
         for vn in self.VN:
-            self.analysis_table[vn]={}
+            self.analysis_table[vn] = {}
             for vt in self.VT:
-                self.analysis_table[vn].update({vt:-1})
+                self.analysis_table[vn].update({vt: -1})
             self.analysis_table[vn].update({'#': -1})
-        for i,item in enumerate(self.P_LIST):
+        for i, item in enumerate(self.P_LIST):
             for x in self.SELECT[i]:
-                self.analysis_table[item[0]][x]=i
+                self.analysis_table[item[0]][x] = i
 
-
-    def analyzeInputString(self):
-        analyze_stack=['#',self.Z]
-        str_list=['I','*','(','I','-','I','#']
+    def analyzeInputString(self,l_in=None):
+        analyze_stack = ['#', self.Z]
+        str_list=[]
+        if not l_in:
+            str_list = ['I', '+', '(', 'I', '-', 'I', '#']
+            print("hello")
+        else:
+            str_list=l_in
         w = str_list.pop(0)
         while analyze_stack:
-            x=analyze_stack.pop()
-            if x!=w:
+            x = analyze_stack.pop()
+            if x != w:
                 if x not in self.VN:
                     return "error1"
-                id=self.analysis_table[x][w]
-                if id==-1:
+                id = self.analysis_table[x][w]
+                if id == -1:
                     return "error2"
-                tmp=self.P_LIST[id][1]
-                if tmp!='$':
-                    tmp=list(tmp)
+                tmp = self.P_LIST[id][1]
+                if tmp != '$':
+                    tmp = list(tmp)
                     tmp.reverse()
-                    analyze_stack+=tmp
+                    analyze_stack += tmp
             else:
                 if w == '#':
                     return "acc"
-                w=str_list.pop(0)
+                w = str_list.pop(0)
         return "error3"
 
-from ..lexer.lexer import Lexer
-if __name__ == "__main__":
-    path='grammar.txt'
-    ll_1=LL1(path)
-    ll_1.initAnalysisTable()
-    print(ll_1.analyzeInputString())
-    '''
-    next link grammar and lexer
-    '''
-    lex=Lexer()
-
-
-
+# if __name__ == "__main__":
+#     path='grammar_static/grammar.txt'
+#     ll_1=LL1(path)
+#     ll_1.initAnalysisTable()
+#     print(ll_1.analyzeInputString())

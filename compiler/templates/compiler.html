@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Compiler</title>
     <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.js"></script>
     <!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css"
@@ -16,14 +16,36 @@
             margin-top: 5px;
             margin-bottom: 10px;
         }
+
+        .fon {
+            font-size: 20px;
+        }
     </style>
     <script type="text/javascript">
         $(document).ready(function () {
-            $("button").click(function () {
-                getItem();
+            $('button#lexer').click(function () {
+                getLexerItem();
+            });
+            $('button#ll1').click(function () {
+                getLLItem();
             });
 
-            function getItem() {
+            function getLLItem() {
+                var src = $('input#Arithmetic').val();
+                console.log(src)
+                if (src.length == 0)
+                    alert('Input cannot be empty');
+                else {
+                    $.getJSON('{% url 'compiler:LL1_json' %}', {'src': src}, function (res) {
+                        console.log(res)
+                        $('#res_ll1').empty();
+                        var p = document.createElement("p");
+                        p.append('[' +res.res+ '] ');
+                        $('#res_ll1').append(p);
+                    })
+                }
+            }
+            function getLexerItem() {
                 var src = $('#code').val();
                 console.log(src);
                 if (src.length == 0)
@@ -64,17 +86,29 @@
         </ul>
     </div>
 </div>
-<div class="row top">
+<div class="row top" id="lexer">
     <div class="col-md-5 col-md-offset-1">
-        <textarea class="form-control" id="code" rows="10" placeholder="input your code here"
-                  style="font-size: 20px"></textarea>
+        <textarea class="form-control fon" id="code" rows="10" placeholder="input your code here"></textarea>
         <div class="btn-btn-group btn-group-lg" role="group" aria-label="...">
-            <button type="submit" class="btn btn-default top" name="submit" οnclick="document.formName.submit()">
+            <button type="submit" id="lexer" class="btn btn-default top" name="submit"
+                    οnclick="document.formName.submit()">
                 分析
             </button>
         </div>
-        <div id="res" style="font-size: 20px">
+        <div id="res" class="fon">
         </div>
+        <hr>
+        <div class="form-group fon">
+            <label for="exampleInputEmail1">输入算术表达式</label>
+            <input class="form-control fon" id="Arithmetic" placeholder="Arithmetic">
+            <div class="btn-group top" role="group" aria-label="...">
+                <button type="button" id="ll1" class="btn btn-default">LL(1)</button>
+                <button type="button" id="re" class="btn btn-default">递归下降</button>
+            </div>
+            <div id="res_ll1" class="fon">
+            </div>
+        </div>
+
     </div>
 
     <div class="col-md-5">
