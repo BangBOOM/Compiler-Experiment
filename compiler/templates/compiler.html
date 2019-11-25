@@ -29,22 +29,43 @@
             $('button#ll1').click(function () {
                 getLLItem();
             });
+            $('button#re').click(function () {
+                getReItem();
+            });
+
+            function getReItem() {
+                var src = $('input#Arithmetic').val();
+                console.log(src);
+                if (src.length == 0)
+                    alert('Input cannot be empty');
+                else {
+                    $.getJSON('{% url 'compiler:re_json' %}', {'src': src}, function (res) {
+                        console.log(res);
+                        $('#res_grammar').empty();
+                        var p = document.createElement("p");
+                        p.append('[' + res.res + '] ');
+                        $('#res_grammar').append(p);
+                    })
+                }
+            }
+
 
             function getLLItem() {
                 var src = $('input#Arithmetic').val();
-                console.log(src)
+                console.log(src);
                 if (src.length == 0)
                     alert('Input cannot be empty');
                 else {
                     $.getJSON('{% url 'compiler:LL1_json' %}', {'src': src}, function (res) {
-                        console.log(res)
-                        $('#res_ll1').empty();
+                        console.log(res);
+                        $('#res_grammar').empty();
                         var p = document.createElement("p");
-                        p.append('[' +res.res+ '] ');
-                        $('#res_ll1').append(p);
+                        p.append('[' + res.res + '] ');
+                        $('#res_grammar').append(p);
                     })
                 }
             }
+
             function getLexerItem() {
                 var src = $('#code').val();
                 console.log(src);
@@ -81,7 +102,7 @@
 <body>
 <div class="row top">
     <div class="col-md-10 col-md-offset-1">
-        <ul class="nav nav-tabs">
+        <ul class="nav nav-tabs fon">
             <li role="presentation" class="active"><a href="#"><strong>compiler</strong></a></li>
         </ul>
     </div>
@@ -105,7 +126,7 @@
                 <button type="button" id="ll1" class="btn btn-default">LL(1)</button>
                 <button type="button" id="re" class="btn btn-default">递归下降</button>
             </div>
-            <div id="res_ll1" class="fon">
+            <div id="res_grammar" class="fon">
             </div>
         </div>
 

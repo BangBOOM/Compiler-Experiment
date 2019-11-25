@@ -149,8 +149,74 @@ class LL1(GrammarParser):
                 w = str_list.pop(0)
         return "error3"
 
-# if __name__ == "__main__":
-#     path='grammar_static/grammar.txt'
-#     ll_1=LL1(path)
-#     ll_1.initAnalysisTable()
-#     print(ll_1.analyzeInputString())
+class RecursiveSubroutineFunc(GrammarParser):
+    def __init__(self,path):
+        GrammarParser.__init__(self)
+        self.initGrammar(path)
+        self.INPUT=list('(I+I)*I#') #默认情况测试使用
+
+    def get_next(self):
+        return self.INPUT.pop(0)
+
+    def analyse(self):
+        x=self.get_next()
+        x=self.E(x)
+        if x=='#':
+            return 'acc'
+        else:
+            return 'error'
+
+    def E(self,x):
+        x=self.T(x)
+        x=self.A(x)
+        return x
+
+
+    def T(self,x):
+        x = self.F(x)
+        x = self.B(x)
+        return x
+
+    def A(self,x):
+        if x not in self.FIRDIC['M']:
+            return x
+        x=self.M(x)
+        x=self.T(x)
+        x=self.A(x)
+        return x
+
+    def B(self,x):
+        if x not in self.FIRDIC['N']:
+            return x
+        x=self.N(x)
+        x=self.F(x)
+        x=self.B(x)
+        return x
+
+    def F(self,x):
+        if x == 'I':
+            return self.get_next()
+        if x=='(':
+            x=self.get_next()
+            x=self.E(x)
+            if x ==')':
+                return self.get_next()
+            else:
+                return 'error'
+        return 'error'
+
+    def M(self,x):
+        if x=='+' or x=='-':
+            return self.get_next()
+        return 'error'
+
+    def N(self,x):
+        if x=='*' or x=='/':
+            return self.get_next()
+        return 'error'
+
+
+if __name__ == "__main__":
+    path='grammar_static/grammar.txt'
+    re=RecursiveSubroutineFunc(path)
+    re.analyse()

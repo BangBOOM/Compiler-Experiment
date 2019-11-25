@@ -8,4 +8,5 @@ urlpatterns=[
     path('compiler',views.index,name='compiler'),
     path('lexer_json',views.getLexerJson,name='lexer_json'),
     path('LL1_json',views.getLL1Json,name='LL1_json'),
+    path('re_json',views.getReJson,name='re_json')
 ]

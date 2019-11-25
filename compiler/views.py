@@ -24,8 +24,7 @@ def getLexerJson(request):
     table_list = make_one_list(lex)
     return JsonResponse({'res': res_list, 'table': table_list}, safe=False)
 
-def getLL1Json(request):
-    src=request.GET['src'].strip()
+def dealSrcFromWeb(src):
     lex=lexer.Lexer()
     lex.get_input_str(src)
     res=lex.analyse(False)
@@ -36,6 +35,20 @@ def getLL1Json(request):
         else:
             list_for_grammar.append('I')
     list_for_grammar.append('#')
+    return list_for_grammar
+
+def getReJson(request):
+    src = request.GET['src'].strip()
+    list_for_grammar=dealSrcFromWeb(src)
+    path = "D:\CSE\jetbrains\pycharm\webforcomplier\compiler\my_func\grammar_static\grammar.txt"
+    re=grammar.RecursiveSubroutineFunc(path)
+    re.INPUT=list_for_grammar
+    res=re.analyse()
+    return JsonResponse({'res':res},safe=False)
+
+def getLL1Json(request):
+    src=request.GET['src'].strip()
+    list_for_grammar=dealSrcFromWeb(src)
     path="D:\CSE\jetbrains\pycharm\webforcomplier\compiler\my_func\grammar_static\grammar.txt"
     ll_1=grammar.LL1(path)
     ll_1.initAnalysisTable()
