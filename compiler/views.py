@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .my_func import lexer, grammar
+from .my_func import lexer, grammar,quaternary
 from django.http import JsonResponse
 
 
@@ -28,7 +28,7 @@ def getLexerJson(request):
 
 def dealSrcFromWeb(src):
     lex = lexer.Lexer()
-    lex.get_input_str(src)
+    lex.get_input_str([src])
     res = lex.analyse(False)
     list_for_grammar = []
     for item in res:
@@ -37,7 +37,7 @@ def dealSrcFromWeb(src):
         else:
             list_for_grammar.append('I')
     list_for_grammar.append('#')
-    return list_for_grammar
+    return list_for_grammar,lex.dic,res
 
 
 def getReJson(request):
@@ -47,12 +47,15 @@ def getReJson(request):
     :return: acc or error
     '''
     src = request.GET['src'].strip()
-    list_for_grammar = dealSrcFromWeb(src)
+    list_for_grammar,dic,l = dealSrcFromWeb(src)
     path = "D:\CSE\jetbrains\pycharm\webforcomplier\compiler\my_func\grammar_static\grammar.txt"
     re = grammar.RecursiveSubroutineFunc(path)
     re.INPUT = list_for_grammar
     res = re.analyse()
-    return JsonResponse({'res': res}, safe=False)
+    qua=[]
+    if res=='acc':
+        qua=getQuaternaryList(l,dic)
+    return JsonResponse({'res': res,'qua':qua}, safe=False)
 
 
 def getLL1Json(request):
@@ -62,13 +65,20 @@ def getLL1Json(request):
     :return:select table
     '''
     src = request.GET['src'].strip()
-    list_for_grammar = dealSrcFromWeb(src)
+    list_for_grammar,dic,l = dealSrcFromWeb(src)
     path = "D:\CSE\jetbrains\pycharm\webforcomplier\compiler\my_func\grammar_static\grammar.txt"
     ll_1 = grammar.LL1(path)
     ll_1.initAnalysisTable()
     select=[list(item) for item in ll_1.SELECT]
     res = ll_1.analyzeInputString(list_for_grammar)
-    return JsonResponse({'res': res, 'select': select, 'p_list': ll_1.P_LIST}, safe=False)
+    qua=[]
+    if res=='acc':
+        qua=getQuaternaryList(l,dic)
+    return JsonResponse({'res': res, 'select': select, 'p_list': ll_1.P_LIST,'qua':qua}, safe=False)
+
+def getQuaternaryList(l,d):
+    qua=quaternary.Quaternary(l,d)
+    return qua.quaternary
 
 
 def index(request):

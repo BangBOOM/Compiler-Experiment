@@ -45,10 +45,14 @@
                         var p = document.createElement("p");
                         p.append('[' + res.res + '] ');
                         $('#res_grammar').append(p);
+                        for(i=0;i<res.qua.length;i++){
+                            var p = document.createElement("p");
+                            p.append('['+res.qua[i]+']');
+                            $('#res_grammar').append(p);
+                        }
                     })
                 }
             }
-
 
             function getLLItem() {
                 var src = $('input#Arithmetic').val();
@@ -62,6 +66,11 @@
                         var p = document.createElement("p");
                         p.append('[' + res.res + '] ');
                         $('#res_grammar').append(p);
+                        for(i=0;i<res.qua.length;i++){
+                            var p = document.createElement("p");
+                            p.append('['+res.qua[i]+']');
+                            $('#res_grammar').append(p);
+                        }
                         $('tbody#ll1').empty();
                         for(i=0;i<res.p_list.length;i++){
                             var tr=document.createElement("tr");

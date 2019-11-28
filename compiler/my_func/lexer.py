@@ -22,6 +22,11 @@ class Lexer:
                   }
 
     def get_input_str(self,input_str_list):
+        '''
+
+        :param input_str_list:['...','...'] split('\n')
+        :return:
+        '''
         self.input_str=input_str_list
 
     def get_char(self):
