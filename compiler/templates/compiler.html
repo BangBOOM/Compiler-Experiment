@@ -62,6 +62,18 @@
                         var p = document.createElement("p");
                         p.append('[' + res.res + '] ');
                         $('#res_grammar').append(p);
+                        $('tbody#ll1').empty();
+                        for(i=0;i<res.p_list.length;i++){
+                            var tr=document.createElement("tr");
+                            tr.id=i;
+                            td1=document.createElement("td");
+                            td1.innerText=res.p_list[i][0]+'->'+res.p_list[i][1];
+                            td2=document.createElement("td");
+                            td2.innerText=res.select[i];
+                            tr.append(td1);
+                            tr.append(td2);
+                            $('tbody#ll1').append(tr);
+                        }
                     })
                 }
             }
@@ -74,7 +86,7 @@
                 else {
                     $.getJSON('{% url 'compiler:lexer_json' %}', {'src': src}, function (res) {
                         console.log(res);
-                        $('tbody').empty();
+                        $('tbody#lexer').empty();
                         for (i = 0; i < res.table.length; i++) {
                             var tr = document.createElement("tr");
                             tr.id = i;
@@ -83,7 +95,7 @@
                                 td.innerText = res.table[i][j];
                                 tr.append(td);
                             }
-                            $('tbody').append(tr);
+                            $('tbody#lexer').append(tr);
                         }
                         $('#res').empty();
                         for (i = 0; i < res.res.length; i++) {
@@ -118,20 +130,7 @@
         </div>
         <div id="res" class="fon">
         </div>
-        <hr>
-        <div class="form-group fon">
-            <label for="exampleInputEmail1">输入算术表达式</label>
-            <input class="form-control fon" id="Arithmetic" placeholder="Arithmetic">
-            <div class="btn-group top" role="group" aria-label="...">
-                <button type="button" id="ll1" class="btn btn-default">LL(1)</button>
-                <button type="button" id="re" class="btn btn-default">递归下降</button>
-            </div>
-            <div id="res_grammar" class="fon">
-            </div>
-        </div>
-
     </div>
-
     <div class="col-md-5">
         <table class="table table-hover">
             <thead>
@@ -145,7 +144,34 @@
                 <th>界符p</th>
             </tr>
             </thead>
-            <tbody>
+            <tbody id="lexer">
+            </tbody>
+        </table>
+    </div>
+</div>
+<hr>
+<div class="row top" id="grammar">
+    <div class="col-md-5 col-md-offset-1">
+        <div class="form-group fon">
+            <label for="exampleInputEmail1">输入算术表达式</label>
+            <input class="form-control fon" id="Arithmetic" placeholder="Arithmetic">
+            <div class="btn-group top" role="group" aria-label="...">
+                <button type="button" id="ll1" class="btn btn-default">LL(1)</button>
+                <button type="button" id="re" class="btn btn-default">递归下降</button>
+            </div>
+            <div id="res_grammar" class="fon">
+            </div>
+        </div>
+    </div>
+    <div class="col-md-5">
+        <table class="table table-hover">
+            <thead>
+            <tr id="ll1">
+                <th>P_LIST</th>
+                <th>SELECT</th>
+            </tr>
+            </thead>
+            <tbody id="ll1">
             </tbody>
         </table>
     </div>
