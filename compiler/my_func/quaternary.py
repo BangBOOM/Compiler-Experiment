@@ -1,3 +1,5 @@
+from lexer import Lexer
+from grammar import LL1
 class Quaternary:
     def __init__(self,l,d):
         self.input_token=l #原始输入token串
@@ -56,4 +58,80 @@ class Quaternary:
                     t,
                 ])
         return final
+
+class Qua:
+    def __init__(self,a,l,d,p):
+        self.analyze_table=a    #{}
+        self.P_LIST=p
+        self.input_token=l
+        self.dic=d
+        self.SEM=[]
+        self.QT=[]
+        self.i=1
+
+
+    def get_char(self,item):
+        x2=self.SEM.pop(-1)
+        x1=self.SEM.pop(-1)
+        self.QT.append([item[1],x1,x2,'t'+str(self.i)])
+        self.SEM.append('t'+str(self.i))
+        self.i+=1
+
+    def analyzeInput(self):
+        SYN=['#','E']
+        demo=self.input_token
+        w = demo.pop(0)
+        while SYN:
+            x=SYN.pop(-1)
+            w_i=self.dic[w[0]][w[1]-1]
+            if x[0]=='f':
+                self.get_char(x)
+                continue
+            if w_i!=x:
+                if w[0]=='i' or w[0]=='con':
+                    w_x='I'
+                else: w_x=w_i
+                id=self.analyze_table[x][w_x]
+                tmp=self.P_LIST[id]
+                if tmp[1]!='$':
+                    tmp1=list(tmp[1]).reverse()
+                    if w[0]=='p' and w_i!='(' and w_i!=')':
+                        if [tmp1[-1],w_i] in self.P_LIST:
+                            tmp.insert(-2,'f'+w_i)
+                    SYN += tmp
+            else:
+                if w[0]=='i' or w[0]=='con':
+                    self.SEM.append(w_i)
+
+#
+# if __name__=='__main__':
+#     src=input('input:')
+#     lex=Lexer()
+#     lex.get_input_str([src])
+#     res=lex.analyse(False)
+#     path = "D:\CSE\jetbrains\pycharm\webforcomplier\compiler\my_func\grammar_static\grammar.txt"
+#     ll1=LL1(path)
+#     ll1.initAnalysisTable()
+#     qua=Qua(ll1.analysis_table,res,lex.dic,ll1.P_LIST)
+#     qua.analyzeInput()
+#     print(qua.QT)
+#
+#
+#
+#
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

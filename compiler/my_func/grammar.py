@@ -218,5 +218,5 @@ class RecursiveSubroutineFunc(GrammarParser):
 
 if __name__ == "__main__":
     path='grammar_static/grammar.txt'
-    re=RecursiveSubroutineFunc(path)
-    re.analyse()
+    ll1=LL1(path)
+
