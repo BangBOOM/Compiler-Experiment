@@ -107,10 +107,12 @@ class GrammarParser:
 class LL1(GrammarParser):
     analysis_table={}
     INPUT_L=[]
+    RES_TOKEN=[]
     def __init__(self):
         GrammarParser.__init__(self)
         self.initList()
         self.initAnalysisTable()
+        self.lex=Lexer()
 
     def initAnalysisTable(self):
         for vn in self.VN:
@@ -120,12 +122,12 @@ class LL1(GrammarParser):
                 self.analysis_table[item[0]][x]=i
 
     def getInput(self,INPUT):  # ['12-a+b']
-        lex=Lexer()
-        lex.getInput(INPUT)
-        res=lex.analyse()
-        for item in res:
+        self.lex.getInput(INPUT)
+        self.RES_TOKEN=self.lex.analyse()
+        self.lex.dict_for_search()
+        for item in self.RES_TOKEN:
             if item[0] == 'p':
-                self.INPUT_L.append(list(lex.DICT['p'])[item[1]])
+                self.INPUT_L.append(list(self.lex.DICT['p'])[item[1]])
             else:
                 self.INPUT_L.append('I')
         self.INPUT_L.append('#')

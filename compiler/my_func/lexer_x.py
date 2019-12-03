@@ -11,6 +11,7 @@ class Lexer:
     INPUT=[]
     CUR_ROW=-1
     CUR_LINE=0
+
     def __init__(self):
         path1=os.path.abspath('lexer_static/keyword_list')
         path2=os.path.abspath('lexer_static/p_list')
@@ -22,6 +23,17 @@ class Lexer:
             for i, item in enumerate(f.readlines()):
                 item=item.strip()
                 self.DICT['p'][item] = i
+
+    def dict_for_search(self):
+        self.DICT_S={
+            'k':list(self.DICT['k']),
+            'p': list(self.DICT['p']),
+            'con': list(self.DICT['con']),
+            'c': list(self.DICT['c']),
+            's': list(self.DICT['s']),
+            'i': list(self.DICT['i']),
+        }
+
     def getInput(self,input_list):
         '''
         :param input_list:['...','...'] the string split by '\n'
@@ -121,3 +133,5 @@ if __name__=="__main__":
     lex.getInput(INPUT)
     res=lex.analyse()
     print(res)
+    lex.dict_for_search()
+    print(lex.DICT_S)
