@@ -165,7 +165,7 @@ class LL1(GrammarParser):
 
 if __name__ == "__main__":
     ll1=LL1()
-    INPUT=input("input:").split('\n')
+    INPUT=input("input:").split('\n')   #sample INPUT=['a+b+c'] must be one line
     ll1.getInput(INPUT)
     res=ll1.analyzeInputString()
     print(res)

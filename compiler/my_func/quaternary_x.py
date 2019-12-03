@@ -56,7 +56,7 @@ class Qua(LL1):
 
 if __name__=="__main__":
     qua=Qua()
-    INPUT=input("input:").split('\n')
+    INPUT=input("input:").split('\n')   #sample INPUT=['a+b+c'] must be one line
     qua.getInput(INPUT)
     print(qua.RES_TOKEN)
     if qua.analyzeInputString()=="acc":

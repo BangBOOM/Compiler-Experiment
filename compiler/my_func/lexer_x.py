@@ -24,7 +24,7 @@ class Lexer:
                 item=item.strip()
                 self.DICT['p'][item] = i
 
-    def dict_for_search(self):
+    def dict_for_search(self): #这个是为了方便检索，其实是设计结构上的一个失误添加的这个
         self.DICT_S={
             'k':list(self.DICT['k']),
             'p': list(self.DICT['p']),
@@ -129,9 +129,7 @@ class Lexer:
 
 if __name__=="__main__":
     lex=Lexer()
-    INPUT=input("input something:").split('\n')
+    INPUT=input("input something:").split('\n')         #sample INPUT=['int a=0;','a=a+4;','c='s'']
     lex.getInput(INPUT)
     res=lex.analyse()
     print(res)
-    lex.dict_for_search()
-    print(lex.DICT_S)
