@@ -1,23 +1,15 @@
-from grammar import LL1
-from lexer import Lexer
+from grammar_x import LL1
+
+
+
 
 
 if __name__=="__main__":
-    lex=Lexer()
-    demo=input("make some in put:").split('\n')
-    lex.get_input_str(demo)
-    res=lex.analyse(False)
-    list_for_grammar=[]
-    for item in res:
-        if item[0]=='p':
-            list_for_grammar.append(lex.dic['p'][item[1]-1])
-        else:
-            list_for_grammar.append('I')
-    list_for_grammar.append('#')
-    path='grammar_static/grammar.txt'
-    ll_1=LL1(path)
-    ll_1.initAnalysisTable()
-    print(ll_1.analyzeInputString(list_for_grammar))
+    ll_1=LL1()
+    ll_1.getInput(['1+2-b'])
+    res=ll_1.analyzeInputString()
+    print(res)
+
 
 
 

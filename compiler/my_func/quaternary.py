@@ -103,7 +103,7 @@ class Qua:
                 if w[0]=='i' or w[0]=='con':
                     self.SEM.append(w_i)
 
-#
+
 # if __name__=='__main__':
 #     src=input('input:')
 #     lex=Lexer()
